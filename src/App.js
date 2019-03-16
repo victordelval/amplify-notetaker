@@ -2,11 +2,17 @@ import React, { Component } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { withAuthenticator } from 'aws-amplify-react';
 import { createNote } from './graphql/mutations';
+import { listNotes } from './graphql/queries';
 
 class App extends Component {
   state = {
     note: "",
     notes: []
+  }
+
+  async componentDidMount() {
+    const result = await API.graphql(graphqlOperation(listNotes));
+    this.setState({ notes: result.data.listNotes.items })
   }
 
   handleChangeNote = event => this.setState({ note: event.target.value });
